@@ -3,29 +3,35 @@
 #include <stdio.h>
 
 fila_t* fila_cria(){
+    /*inicializando a fila e apontando os ponteiros ini e fim pra nulo*/
     fila_t* fila = malloc(sizeof(fila_t));
-    fila->tamanho = 0;
     if(fila==NULL)
         return NULL;
     
+    fila->tamanho = 0;
+    fila->ini = NULL;
+    fila->fim = NULL;
+
     return fila;
 }
 
 fila_t* fila_destroi (fila_t* f){
-    nodo_f_t* nodo1 = f->ini;
-    if(nodo1 == NULL){ /*Liberando espaço em caso de fila vazia*/
+    nodo_f_t* p;
+
+    /*Liberando espaço em caso de fila vazia*/
+    if(fila_vazia(f)){ 
         free(f);
         return NULL;
     }
     
-    nodo_f_t* nodo2 = f->ini->prox; /*liberando espaço nodo a nodo*/
-    while(nodo2!=NULL){
-        free(nodo1);
-        nodo1 = nodo2;
-        nodo2 = nodo2->prox;
+    p = f->ini->prox;
+    while(p!=NULL){
+        free(f->ini);
+        f->ini = p;
+        p = p->prox;
     }
     /*liberando o último nodo e o espaço da fila em si*/
-    free(nodo1);
+    free(f->ini);
     free(f);
     return NULL;
 }
@@ -60,26 +66,40 @@ int queue (fila_t* f, int elemento){
 }
 
 int dequeue (fila_t* f, int* elemento){
+    nodo_f_t* aux;
     /*tratando caso de fila já vazia*/
     if(fila_vazia(f))
         return 0;
+    
     /*retirando, alocando no parâmetro elemento e devolvendo espaço do nodo*/
+    if(fila_tamanho(f) == 1){
+        *elemento = f->ini->chave;
+        free(f->fim);
+        f->tamanho--;
+        return 1;
+    }
+
+    aux = f->ini;
     *elemento = f->ini->chave;
     f->ini = f->ini->prox;
     f->tamanho--;
+    free(aux);
     return 1;
 }
 
 void fila_imprime (fila_t* f){
+    nodo_f_t* p;
     if(fila_vazia(f))
         return;
-    nodo_f_t* p = f->ini;
-    while(p->prox != NULL){
+    
+    p = f->ini;
+    while(p != NULL){
         printf("%d ", p->chave);
         p = p->prox;
     }
+    printf("\n");
+
     /*liberando espaço p*/
     free(p);
-    printf("%d\n", p->chave);
     return;
 }

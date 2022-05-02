@@ -7,6 +7,8 @@ struct dados {
     double totalD;
     double refD;
     double maskD;
+
+    lista_t* nAtend_total;
     lista_t* nAtend_vac;
     lista_t* nAtend_mask;
     lista_t* nAtend_ref;

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "libpilha.h": "c",
+        "liblista.h": "c"
+    }
+}
